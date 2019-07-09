@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법 - Heee's Development Blog</title>
+    <meta name="author"  content="HeeJeong Kwon">
+    <meta name="description" content="[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법">
+    <meta name="keywords"  content="spring, mysql, DB프로그래밍, jdbc">
+    <!-- Open Graph -->
+    <meta property="og:title" content="[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법 - Heee's Development Blog">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://gmlwjd9405.github.io/2018/05/15/setting-for-db-programming.html">
+    <meta property="og:description" content="Step by step goes a long way.">
+    <meta property="og:site_name" content="Heee's Development Blog">
+    <link rel="stylesheet" href="//cdn.staticfile.org/normalize/6.0.0/normalize.min.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_roc50gemkxpw4s4i.css">
+    <link rel="stylesheet" href="/assets/css/github-markdown.css">
+    <link rel="stylesheet" href="/assets/css/prism.css">
+    <link rel="stylesheet" href="/assets/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/app.min.css">
+    <link rel="shortcut icon" href="/assets/img/penguin2.ico">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108900430-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-108900430-2');
+    </script>
+</head>
+
+<body>
+    <!--[if lt IE 10]>
+<div class="alert-danger" role="alert">你的浏览器实在太太太旧了，放学别走，升级完浏览器再说！<a target="_blank" class="alert-link" href="http://browsehappy.com">立即升级</a></div>
+<![endif]-->
+ <input id="nm-switch" type="hidden" value="false">
+
+<header class="g-header">
+  <!--
+    <div class="g-logo">
+        <a href=""></a>
+    </div>
+  -->
+    <i id="menu-toggle" class="iconfont icon-menu"></i>
+    <nav class="g-nav">
+        <ul>
+
+            <li><a href="/">home</a></li>
+
+            <li><a href="/tags.html">tags</a></li>
+
+        </ul>
+    </nav>
+</header>
+
+
+<header class="g-banner post-header post-pattern-circuitBoard bgcolor-default " data-theme="default">
+    <div class="post-wrapper">
+        <div class="post-tags">
+
+
+            <a href="/tags#spring" class="post-tag">spring</a>
+
+            <a href="/tags#mysql" class="post-tag">mysql</a>
+
+            <a href="/tags#DB프로그래밍" class="post-tag">DB프로그래밍</a>
+
+            <a href="/tags#jdbc" class="post-tag">jdbc</a>
+
+
+        </div>
+        <h1>[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법</h1>
+        <div class="post-meta">
+            <span class="post-meta-item"><i class="iconfont icon-author"></i><a href="http://gmlwjd9405.github.io" target="_blank" rel="author">heejeong Kwon</a></></span>
+            <time class="post-meta-item" datetime="18-05-15"><i class="iconfont icon-date"></i>15 May 2018</time>
+        </div>
+    </div>
+
+    <div class="filter"></div>
+    <div class="post-cover" style="background: url('/images/setting-for-dbprogramming/setting-for-dbprogramming-main.png') center no-repeat; background-size: cover;">
+
+</header>
+
+<div align="center">
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- PC_Bottom_auto -->
+<ins class="adsbygoogle"
+     style="display:block;margin-top:10px;"
+     data-ad-client="ca-pub-2537250461183662"
+     data-ad-slot="3651407657"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</div>
+
+
+<div class="post-content">
+
+    <h2 class="post-subtitle">Java Data Access Layer의 이해 및 Spring JDBC를 이용한 데이터 접근 방법</h2>
+
+    <article class="markdown-body">
+        <h2 id="goal">Goal</h2>
+<blockquote>
+  <ul>
+    <li>Data Access Layer에 대해 이해할 수 있다.
+      <ul>
+        <li>DAO란 (DAO vs DTO)</li>
+        <li>DataSource란</li>
+        <li>JDBC란 (Plain JDBC vs Spring JDBC)</li>
+        <li>JDBC Driver란</li>
+      </ul>
+    </li>
+    <li>Spring 프로젝트에서 DB(MySQL)의 데이터에 접근하기 위해 필요한 Library를 설치할 수 있다.</li>
+  </ul>
+</blockquote>
+
+<h1 id="data-access-layer-이해하기">Data Access Layer 이해하기</h1>
+<p><img src="/images/setting-for-dbprogramming/data-access-layer.png" alt="" /></p>
+
+<h3 id="-daodata-access-object-란"># DAO(Data Access Object) 란?</h3>
+<p><img src="/images/setting-for-dbprogramming/dao-structure.png" alt="" width="400" height="200" /></p>
+
+<p>DAO(Data Access Object)는 실제로 DB에 접근하는 객체이다.</p>
+<ul>
+  <li>Service와 DB를 연결하는 고리의 역할을 한다.</li>
+  <li>DAO는 개발자가 직접 코딩해야되는 부분이다.
+    <ul>
+      <li>SQL를 사용하여 DB에 접근한 후 적절한 CRUD API를 제공한다.</li>
+    </ul>
+  </li>
+  <li>“Object”단위 —(SQL을 이용한 CRUD)—&gt; DB의 “Record”단위로 저장
+    <ul>
+      <li>Object와 Record 간의 miss match가 발생할 수 있다.</li>
+      <li>이런 miss match는 해결해줘야 한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>참고) <mark>DAO vs DTO</mark></p>
+<ul>
+  <li><a href="https://gmlwjd9405.github.io/2018/12/25/difference-dao-dto-entity.html">https://gmlwjd9405.github.io/2018/12/25/difference-dao-dto-entity.html</a></li>
+</ul>
+
+<h3 id="-datasource-란"># DataSource 란?</h3>
+<p>DataSource는 JDBC 명세의 일부분이면서 일반화된 연결 팩토리이다. 즉 DB와 관계된 connection 정보를 담고 있으며, bean으로 등록하여 인자로 넘겨준다. 이 과정을 통해 Spring은 DataSource로 DB와의 연결을 획득한다.</p>
+
+<ul>
+  <li>DataSource는 JDBC Driver vendor(Mysql, Oracle 등) 별로 여러가지가 존재한다.</li>
+  <li><strong>DataSource가 하는 일</strong>
+    <ol>
+      <li>DB Server와의 기본적인 연결</li>
+      <li>DB Connection Pooling 기능 (<mark>* </mark> 아래 참고)</li>
+      <li>트랜젝션 처리</li>
+    </ol>
+  </li>
+  <li><strong>DataSource의 구현 예시</strong>
+    <ol>
+      <li><span style="color:#4d0000"><strong>BasicDataSource</strong></span> (선택!)</li>
+      <li>PoolingDataSource</li>
+      <li>SingleConnectionDataSource</li>
+      <li>DriverManagerDataSource</li>
+    </ol>
+  </li>
+  <li><strong>DataSource 설정 및 Bean 등록, 주입 방법</strong> (<mark>* </mark> 코드 아래 참고)</li>
+  <li><img src="/images/setting-for-dbprogramming/datasource-example.png" alt="" />
+    <ol>
+      <li>DB와의 연결을 위한 DB Server에 관한 정보(Property)를 설정한다.
+        <ul>
+          <li>설정 정보: url, driver, username, password</li>
+        </ul>
+      </li>
+      <li>해당 property file에 있는 값을 place holder을 통해 DataS래ucde의 속성으로 설정한 후 해당 BasicDataSource를 bean으로 등록한다.
+        <ul>
+          <li>Spring JDBC를 사용하려면 먼저, DB Connection을 가져오는 DataSource를 Spring IoC 컨테이너의 공유 가능한 <em>Bean으로 등록해야 한다.</em></li>
+        </ul>
+      </li>
+      <li>생성된 BasicDataSource Bean을 Spring JDBC에 주입한다.</li>
+    </ol>
+  </li>
+</ul>
+
+<p><mark>* DB Connection Pooling이란?</mark></p>
+<ul>
+  <li>자바 프로그램에서 데이터베이스에 연결(Connection 객체를 얻는 작업)은 시간이 많이 걸린다.</li>
+  <li>만약, <strong>일정량의 Connection을 미리 생성시켜 저장소에 저장했다가</strong> 프로그램에서 요청이 있으면 저장소에서 Connection 꺼내 제공한다면 시간을 절약할 수 있다. 이러한 프로그래밍 기법을 Connection Pooling이라 한다.</li>
+  <li>Connection Pooling을 이용하면 속도와 퍼포먼스가 좋아진다.</li>
+</ul>
+
+<p><mark>Placeholder의 장점</mark></p>
+<ul>
+  <li>정보를 적어둔 곳에서 내용만 고치면 다른 모든 부분에서 변경된 내용이 적용된다.</li>
+  <li>예를 들어, Parameter 정보들을 적어둔 Property file에서 특정 정보를 수정하면  변경된 정보가 placeholder를 통해 <code class="highlighter-rouge">${jdbc.password}</code>에 주입된다.</li>
+  <li>예를 들어, pom.xml에서 springframework-version을 4.2.5.RELEASE로 설정했으면
+<code class="highlighter-rouge">&lt;groupId&gt;org.springframework&lt;/groupId&gt;</code>에 해당하는 밑에 요소들은 <code class="highlighter-rouge">${org.springframework-version}</code> 로 적어주면 알아서 버전에 맞는 것이 적용된다.</li>
+</ul>
+
+<p><mark>* DataSource 관련 코드</mark></p>
+<pre><code class="language-code">jdbc.driver = com.mysql.jdbc.Driver
+jdbc.url = jdbc:mysql//localhost:3306/databaseName
+jdbc.username = root
+jdbc.password = password
+</code></pre>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;context:property-placeholder</span> <span class="na">location=</span><span class="s">"com/spring/props/jdbc.properties"</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"${jdbc.driverClassName}"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"${jdbc.url}"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"${jdbc.username}"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"${jdbc.password}"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/bean&gt;</span>
+</code></pre></div></div>
+
+<h3 id="-jdbcjava-database-connectivity-란"># JDBC(Java Database Connectivity) 란?</h3>
+<p>JDBC(Java Database Connectivity)는 DB에 접근할 수 있도록 <strong><em>Java에서</em></strong> 제공하는 API이다. (모든 Java의 Data Access 기술의 근간)</p>
+<ul>
+  <li>JDBC는 데이터베이스에서 자료를 쿼리하거나 업데이트하는 방법을 제공한다.</li>
+  <li><strong>Plain JDBC API의 문제점</strong>
+    <ol>
+      <li>쿼리를 실행하기 전과 후에 많은 코드를 작성해야한다. EX) 연결 생성, 명령문, ResultSet 닫기, 연결 등</li>
+      <li>데이터베이스 로직에서 예외 처리 코드를 수행해야 한다.</li>
+      <li>트랜잭션을 처리해야 한다.</li>
+      <li>이러한 모든 코드를 반복하는 것으로, 시간이 낭비된다.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="-jdbc-template-이란"># JDBC Template 이란?</h3>
+<p>JDBC Template은 Spring JDBC 접근 방법 중 하나로, 내부적으로 Plain JDBC API를 사용하지만 위와 같은 문제점들을 제거한 형태의 <strong><em>Spring에서</em></strong> 제공하는 class이다.</p>
+<ul>
+  <li><strong>Spring JDBC가 하는 일</strong>
+    <ol>
+      <li>Connection 열기와 닫기</li>
+      <li>Statement 준비와 닫기</li>
+      <li>Statement 실행</li>
+      <li>ResultSet Loop처리</li>
+      <li>Exception 처리와 반환</li>
+      <li>Transaction 처리</li>
+    </ol>
+  </li>
+  <li><strong>Spring JDBC에서 개발자가 할 일</strong>
+    <ul>
+      <li>핵심적으로 해야될 작업만 해주면 나머지는 Framwork가 알아서 처리해준다.</li>
+      <li><img src="/images/setting-for-dbprogramming/spring-jdbc-example.png" alt="" />
+        <ol>
+          <li>datasource 설정</li>
+          <li>sql문 작성</li>
+          <li>결과 처리</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Spring framework는 아래와 같은 <strong>Spring JDBC 접근 방법</strong>을 제공한다.
+    <ol>
+      <li><span style="color:#4d0000"><strong>JdbcTemplate</strong></span> (선택!)
+        <ul>
+          <li>전형적인 Spring JDBC 접근 방법이고 가장 인기가 좋다.</li>
+          <li>쿼리를 직접 작성하는 방법을 제공하므로 많은 작업과 시간을 절약 할 수 있다.</li>
+        </ul>
+      </li>
+      <li>NamedParameterJdbcTemplate</li>
+      <li>SimpleJdbcTemplate</li>
+      <li>SimpleJdbcInsert 및 SimpleJdbcCall</li>
+    </ol>
+  </li>
+  <li><strong>JdbcTemplate이 제공하는 기능</strong>
+    <ol>
+      <li>실행 : Insert나 Update같이 DB의 데이터에 변경이 일어나는 쿼리를 수행하는 작업</li>
+      <li>조회 : Select를 이용해 데이터를 조회하는 작업</li>
+      <li>배치 : 여러 개의 쿼리를 한 번에 수행해야 하는 작업</li>
+    </ol>
+  </li>
+  <li><a href="https://gmlwjd9405.github.io/2018/12/19/jdbctemplate-usage.html"><strong>JdbcTemplate 사용법 참고</strong></a></li>
+</ul>
+
+<h3 id="-jdbc-driver-란"># JDBC Driver 란?</h3>
+<p>JDBC Driver는 자바 프로그램의 요청을 DBMS가 이해할 수 있는 프로토콜로 변환해주는 클라이언트 사이드 어댑터이다.</p>
+<ul>
+  <li>DB마다 Driver가 존재하므로, 자신이 사용하는 DB에 맞는 JDBC Driver를 사용한다.</li>
+  <li>DataSource를 JDBC Template에 주입(Dependency Injection)시키고 JDBC Template은
+JDBC Driver를 이용하여 DB에 접근한다.</li>
+</ul>
+
+<hr />
+
+<h1 id="spring-프로젝트에서-db-프로그래밍을-위해-필요한-library">Spring 프로젝트에서 DB 프로그래밍을 위해 필요한 Library</h1>
+<ol>
+  <li><strong>jdbc class: spring-jdbc</strong>
+    <ul>
+      <li>org.springframework.jdbc.core.JdbcTemplate</li>
+    </ul>
+  </li>
+  <li><strong>data source: commons-dbcp</strong>
+    <ul>
+      <li>org.apache.commons.dbcp.BasicDataSource</li>
+    </ul>
+  </li>
+  <li><strong>jdbc driver: mysql-connector-java</strong>
+    <ul>
+      <li>com.mysql.jdbc.Driver</li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="spring-프로젝트에서의-db-프로그래밍을-위해-필요한-library-설정하기">Spring 프로젝트에서의 DB 프로그래밍을 위해 필요한 Library 설정하기</h1>
+<ul>
+  <li>pom.xml의 dependencies tab 클릭 후 각 Library를 입력하여 add한다.</li>
+  <li>만약 pom.xml의 dependencies의 add가 안된다면</li>
+</ul>
+
+<ol>
+  <li>아래를 적용한 후 다시 시도한다.
+    <ul>
+      <li>window &gt; show view &gt; others &gt; maven &gt; maven repository</li>
+      <li>Global Repositories의 하위 전체 선택 후 &gt; 우클릭 &gt; Rebuild Index 클릭</li>
+      <li><img src="/images/setting-for-dbprogramming/maven-add.png" alt="" /></li>
+    </ul>
+  </li>
+  <li>google에 maven repository를 검색하여 소스에 직접 넣을 수 있다.
+<br /> ( Maven 사이트: <a href="https://mvnrepository.com/">https://mvnrepository.com/</a> )
+<br /> maven이 제대로 되지 않는 경우, 아래의 dependency를 직접 pom.xml에 넣는다.</li>
+</ol>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">dependency</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">groupId</span><span class="o">&gt;</span><span class="nx">org</span><span class="p">.</span><span class="nx">springframework</span><span class="o">&lt;</span><span class="sr">/groupId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">artifactId</span><span class="o">&gt;</span><span class="nx">spring</span><span class="o">-</span><span class="nx">jdbc</span><span class="o">&lt;</span><span class="sr">/artifactId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">version</span><span class="o">&gt;</span><span class="nx">$</span><span class="p">{</span><span class="nx">org</span><span class="p">.</span><span class="nx">springframework</span><span class="o">-</span><span class="nx">version</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/version</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="sr">/dependency</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="nx">dependency</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">groupId</span><span class="o">&gt;</span><span class="nx">commons</span><span class="o">-</span><span class="nx">dbcp</span><span class="o">&lt;</span><span class="sr">/groupId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">artifactId</span><span class="o">&gt;</span><span class="nx">commons</span><span class="o">-</span><span class="nx">dbcp</span><span class="o">&lt;</span><span class="sr">/artifactId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">version</span><span class="o">&gt;</span><span class="mf">1.4</span><span class="o">&lt;</span><span class="sr">/version</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="sr">/dependency</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="nx">dependency</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">groupId</span><span class="o">&gt;</span><span class="nx">mysql</span><span class="o">&lt;</span><span class="sr">/groupId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">artifactId</span><span class="o">&gt;</span><span class="nx">mysql</span><span class="o">-</span><span class="nx">connector</span><span class="o">-</span><span class="nx">java</span><span class="o">&lt;</span><span class="sr">/artifactId</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">version</span><span class="o">&gt;</span><span class="mf">5.1</span><span class="p">.</span><span class="mi">38</span><span class="o">&lt;</span><span class="sr">/version</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="sr">/dependency</span><span class="err">&gt;
+</span></code></pre></div></div>
+<ul>
+  <li>각 library는 필요한 하위 부분을 함께 가져온다.
+    <ul>
+      <li><img src="/images/setting-for-dbprogramming/sub-libraries.png" alt="" /></li>
+      <li><strong>jdbc class: spring-jdbc</strong>
+        <ul>
+          <li>spring-beans</li>
+          <li>spring-core</li>
+          <li>spring-tx</li>
+        </ul>
+      </li>
+      <li><strong>data source: commons-dbcp</strong>
+        <ul>
+          <li>commons-pool</li>
+        </ul>
+      </li>
+      <li><strong>jdbc driver: mysql-connector-java</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="관련된-post">관련된 Post</h1>
+<ul>
+  <li>JdbcTemplate 사용법에 대해 알고 싶으시면 <a href="https://gmlwjd9405.github.io/2018/12/19/jdbctemplate-usage.html">JdbcTemplate 사용법</a>을 참고하시기 바랍니다.</li>
+  <li>Eclipse에서 Spring MVC 프로젝트 생성하기에 대해 알고 싶으시면 <a href="https://gmlwjd9405.github.io/2018/05/07/spring-project-eclipse-setting.html">Eclipse에서 Spring MVC 프로젝트 생성하기</a>를 참고하시기 바랍니다.</li>
+  <li>MySQL 설치방법 등을 알고 싶으시면 <a href="https://gmlwjd9405.github.io/2018/05/08/mysql-download.html">MySQL 설치</a> 를 참고하시기 바랍니다.</li>
+  <li>MySQL Workbench 사용법을 알고 싶으시면 <a href="https://gmlwjd9405.github.io/2018/05/11/mysql-workbench-guide.html">MySQL Workbench 사용법</a> 을 참고하시기 바랍니다.</li>
+</ul>
+
+<h1 id="references">References</h1>
+<blockquote>
+  <ul>
+    <li><a href="https://ko.wikipedia.org/wiki/JDBC">https://ko.wikipedia.org/wiki/JDBC</a></li>
+    <li><a href="https://docs.spring.io/spring/docs/4.0.x/spring-framework-reference/html/jdbc.html">https://docs.spring.io/spring/docs/4.0.x/spring-framework-reference/html/jdbc.html</a></li>
+    <li><a href="https://www.javatpoint.com/spring-JdbcTemplate-tutorial">https://www.javatpoint.com/spring-JdbcTemplate-tutorial</a></li>
+    <li><a href="https://blog.outsider.ne.kr/882">https://blog.outsider.ne.kr/882</a></li>
+    <li><a href="http://preamtree.tistory.com/88">http://preamtree.tistory.com/88</a></li>
+    <li><a href="http://smallgiant.tistory.com/13">http://smallgiant.tistory.com/13</a></li>
+    <li><a href="http://www.java-school.net/jdbc/Connection-Pool">http://www.java-school.net/jdbc/Connection-Pool</a></li>
+  </ul>
+</blockquote>
+
+    </article>
+    <!--
+
+  -->
+</div>
+
+<div align="center">
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- PC_Bottom_rectangle -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px;margin-bottom:50px;"
+     data-ad-client="ca-pub-2537250461183662"
+     data-ad-slot="6843713057"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</div>
+
+
+<section class="author-detail">
+    <section class="post-footer-item author-card">
+        <div class="avatar">
+            <img src="/assets/img/heee.png" alt="">
+        </div>
+        <div class="author-name" rel="author">HeeJeong Kwon</div>
+        <div class="bio">
+            <p>computer programmer</p>
+        </div>
+
+        <ul class="sns-links">
+
+            <li>
+                <a href="//github.com/gmlwjd9405" target="_blank">
+                    <i class="iconfont icon-github"></i>
+                </a>
+            </li>
+
+        </ul>
+
+    </section>
+    <section class="post-footer-item read-next">
+
+        <div class="read-next-item">
+            <a href="/2018/05/16/github-repository-description-icon.html" class="read-next-link"></a>
+            <section>
+                <span>[Github] Github 저장소의 Description・Readme에 아이콘 넣기</span>
+                <p>Goal      자신의 Github 저장소 설명(Repository’s description)에 아이...</p>
+            </section>
+
+            <div class="filter"></div>
+            <img src="/images/github-repository-description-icon/github-repository-description-icon-main.png" alt="">
+
+        </div>
+
+
+        <div class="read-next-item">
+            <a href="/2018/05/14/how-to-study-algorithms.html" class="read-next-link"></a>
+            <section>
+                <span>[공부법] 알고리즘 공부법</span>
+                <p>Session      알고리즘 사이트 모음    알고리즘 추천 책    알고리즘 공부법    알고리즘...</p>
+            </section>
+
+            <div class="filter"></div>
+            <img src="/images/how-to-study-algorithms/how-to-study-algorithms-main.png" alt="">
+
+        </div>
+
+    </section>
+
+    <section class="post-footer-item comment">
+        <div id="disqus_thread"></div>
+    </section>
+
+</section>
+
+<footer class="g-footer">
+    <section>Heee's Development Blog © 2019</section>
+    <section>Powered by <a href="//jekyllrb.com">Jekyll</a></section>
+</footer>
+
+
+<script src="/assets/js/social-share.min.js"></script>
+<script>
+    socialShare('.social-share', {
+        sites: [],
+        wechatQrcodeTitle: "post wechatQrcodeTitle test",
+        wechatQrcodeHelper: '<p>postHelper</p><p>wechatQrcodeHelper</p>'
+    });
+</script>
+
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+/*写入自己的disqus信息*/
+s.src = 'https://heees-blog.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="/assets/js/prism.js"></script>
+<script src="/assets/js/index.min.js"></script>
+
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://heees-blog.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</body>
+</html>
