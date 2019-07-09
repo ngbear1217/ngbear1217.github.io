@@ -4,16 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법 - Heee's Development Blog</title>
-    <meta name="author"  content="HeeJeong Kwon">
-    <meta name="description" content="[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법">
-    <meta name="keywords"  content="spring, mysql, DB프로그래밍, jdbc">
-    <!-- Open Graph -->
-    <meta property="og:title" content="[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법 - Heee's Development Blog">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="http://gmlwjd9405.github.io/2018/05/15/setting-for-db-programming.html">
-    <meta property="og:description" content="Step by step goes a long way.">
-    <meta property="og:site_name" content="Heee's Development Blog">
+    <title>[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법 </title>
+
     <link rel="stylesheet" href="//cdn.staticfile.org/normalize/6.0.0/normalize.min.css">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_roc50gemkxpw4s4i.css">
     <link rel="stylesheet" href="/assets/css/github-markdown.css">
@@ -22,89 +14,22 @@
     <link rel="stylesheet" href="/assets/css/app.min.css">
     <link rel="shortcut icon" href="/assets/img/penguin2.ico">
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108900430-2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-108900430-2');
-    </script>
+   
 </head>
 
 <body>
-    <!--[if lt IE 10]>
-<div class="alert-danger" role="alert">你的浏览器实在太太太旧了，放学别走，升级完浏览器再说！<a target="_blank" class="alert-link" href="http://browsehappy.com">立即升级</a></div>
-<![endif]-->
- <input id="nm-switch" type="hidden" value="false">
-
-<header class="g-header">
-  <!--
-    <div class="g-logo">
-        <a href=""></a>
-    </div>
-  -->
-    <i id="menu-toggle" class="iconfont icon-menu"></i>
-    <nav class="g-nav">
-        <ul>
-
-            <li><a href="/">home</a></li>
-
-            <li><a href="/tags.html">tags</a></li>
-
-        </ul>
-    </nav>
-</header>
+  
 
 
-<header class="g-banner post-header post-pattern-circuitBoard bgcolor-default " data-theme="default">
-    <div class="post-wrapper">
-        <div class="post-tags">
 
 
-            <a href="/tags#spring" class="post-tag">spring</a>
 
-            <a href="/tags#mysql" class="post-tag">mysql</a>
-
-            <a href="/tags#DB프로그래밍" class="post-tag">DB프로그래밍</a>
-
-            <a href="/tags#jdbc" class="post-tag">jdbc</a>
-
-
-        </div>
-        <h1>[Spring JDBC] Spring JDBC를 이용한 데이터 접근 방법</h1>
-        <div class="post-meta">
-            <span class="post-meta-item"><i class="iconfont icon-author"></i><a href="http://gmlwjd9405.github.io" target="_blank" rel="author">heejeong Kwon</a></></span>
-            <time class="post-meta-item" datetime="18-05-15"><i class="iconfont icon-date"></i>15 May 2018</time>
-        </div>
-    </div>
-
-    <div class="filter"></div>
-    <div class="post-cover" style="background: url('/images/setting-for-dbprogramming/setting-for-dbprogramming-main.png') center no-repeat; background-size: cover;">
-
-</header>
-
-<div align="center">
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- PC_Bottom_auto -->
-<ins class="adsbygoogle"
-     style="display:block;margin-top:10px;"
-     data-ad-client="ca-pub-2537250461183662"
-     data-ad-slot="3651407657"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-</div>
 
 
 <div class="post-content">
-
-    <h2 class="post-subtitle">Java Data Access Layer의 이해 및 Spring JDBC를 이용한 데이터 접근 방법</h2>
-
+    
+    <h1 class="post-subtitle">Java Data Access Layer의 이해 및 Spring JDBC를 이용한 데이터 접근 방법</h1>
+    
     <article class="markdown-body">
         <h2 id="goal">Goal</h2>
 <blockquote>
@@ -387,140 +312,12 @@ JDBC Driver를 이용하여 DB에 접근한다.</li>
 
     </article>
     <!--
-
+    
   -->
-</div>
 
-<div align="center">
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- PC_Bottom_rectangle -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px;margin-bottom:50px;"
-     data-ad-client="ca-pub-2537250461183662"
-     data-ad-slot="6843713057"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-</div>
-
-
-<section class="author-detail">
-    <section class="post-footer-item author-card">
-        <div class="avatar">
-            <img src="/assets/img/heee.png" alt="">
-        </div>
-        <div class="author-name" rel="author">HeeJeong Kwon</div>
-        <div class="bio">
-            <p>computer programmer</p>
-        </div>
-
-        <ul class="sns-links">
-
-            <li>
-                <a href="//github.com/gmlwjd9405" target="_blank">
-                    <i class="iconfont icon-github"></i>
-                </a>
-            </li>
-
-        </ul>
-
-    </section>
-    <section class="post-footer-item read-next">
-
-        <div class="read-next-item">
-            <a href="/2018/05/16/github-repository-description-icon.html" class="read-next-link"></a>
-            <section>
-                <span>[Github] Github 저장소의 Description・Readme에 아이콘 넣기</span>
-                <p>Goal      자신의 Github 저장소 설명(Repository’s description)에 아이...</p>
-            </section>
-
-            <div class="filter"></div>
-            <img src="/images/github-repository-description-icon/github-repository-description-icon-main.png" alt="">
-
-        </div>
-
-
-        <div class="read-next-item">
-            <a href="/2018/05/14/how-to-study-algorithms.html" class="read-next-link"></a>
-            <section>
-                <span>[공부법] 알고리즘 공부법</span>
-                <p>Session      알고리즘 사이트 모음    알고리즘 추천 책    알고리즘 공부법    알고리즘...</p>
-            </section>
-
-            <div class="filter"></div>
-            <img src="/images/how-to-study-algorithms/how-to-study-algorithms-main.png" alt="">
-
-        </div>
-
-    </section>
-
-    <section class="post-footer-item comment">
-        <div id="disqus_thread"></div>
-    </section>
-
-</section>
-
-<footer class="g-footer">
-    <section>Heee's Development Blog © 2019</section>
-    <section>Powered by <a href="//jekyllrb.com">Jekyll</a></section>
-</footer>
-
-
-<script src="/assets/js/social-share.min.js"></script>
-<script>
-    socialShare('.social-share', {
-        sites: [],
-        wechatQrcodeTitle: "post wechatQrcodeTitle test",
-        wechatQrcodeHelper: '<p>postHelper</p><p>wechatQrcodeHelper</p>'
-    });
-</script>
-
-<script>
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-/*
-var disqus_config = function () {
-this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-*/
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-/*写入自己的disqus信息*/
-s.src = 'https://heees-blog.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
 <script src="/assets/js/prism.js"></script>
 <script src="/assets/js/index.min.js"></script>
-
-
-<div id="disqus_thread"></div>
-<script>
-
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-/*
-var disqus_config = function () {
-this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-*/
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://heees-blog.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
 
